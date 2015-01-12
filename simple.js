@@ -1,4 +1,10 @@
-var BigInt = require('./index').BigInt;
+var bigInt = require('./index');
 
-console.log(new BigInt(0));
-console.log(new BigInt(1));
+console.log(bigInt(0).toString());
+console.log(bigInt(1).toString());
+console.log(bigInt(-1).toString());
+console.log(bigInt(100).toString());
+console.log(bigInt(-100).toString());
+console.log(bigInt(1000).toString());
+console.log(bigInt(-1000).toString());
+console.log(bigInt(123456789).toString());
