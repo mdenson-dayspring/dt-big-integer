@@ -5,14 +5,19 @@ A library providing a arbitrary length integer implementation for Node and brows
 
 ## Installation
 
-  npm install dt-big-integer --save
+    npm install dt-big-integer --save
 
 ## Usage
 
+    var bigInt = require('dt-big-integer');
+    
+    var zero = bigInt();
+    var one = bigInt(1);
+    var bigger = bitInt(123456789);
 
 ## Tests
 
-  npm test
+    npm test
 
 ## Contributing
 
