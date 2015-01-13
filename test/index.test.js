@@ -54,6 +54,92 @@ describe('#methods', function() {
   });
 });
 
+describe('#comparison', function() {
+  it('compareTo(bigInt)', function() {
+    bigInt(0).compareTo(bigInt(0)).should.equal(0);
+    bigInt(1).compareTo(bigInt(0)).should.equal(1);
+    bigInt(0).compareTo(bigInt(1)).should.equal(-1);
+
+    bigInt(1).compareTo(bigInt(1)).should.equal(0);
+    bigInt(2).compareTo(bigInt(1)).should.equal(1);
+    bigInt(1).compareTo(bigInt(2)).should.equal(-1);
+
+    bigInt(1000).compareTo(bigInt(1000)).should.equal(0);
+    bigInt(1000).compareTo(bigInt(1)).should.equal(1);
+    bigInt(1).compareTo(bigInt(1000)).should.equal(-1);
+
+    bigInt(-1000).compareTo(bigInt(-1000)).should.equal(0);
+    bigInt(-1001).compareTo(bigInt(-1000)).should.equal(1);
+    bigInt(-1000).compareTo(bigInt(-1001)).should.equal(-1);
+
+    bigInt(-1).compareTo(bigInt(1)).should.equal(-1);
+    bigInt(1).compareTo(bigInt(-1)).should.equal(1);
+
+    bigInt(123456789).compareTo(bigInt(987654321)).should.equal(-1);
+    bigInt(121111111).compareTo(bigInt(111111111)).should.equal(1);
+    bigInt(111121111).compareTo(bigInt(111111111)).should.equal(1);
+    bigInt(111111121).compareTo(bigInt(111111111)).should.equal(1);
+    bigInt(111111111).compareTo(bigInt(121111111)).should.equal(-1);
+    bigInt(111111111).compareTo(bigInt(111121111)).should.equal(-1);
+    bigInt(111111111).compareTo(bigInt(111111121)).should.equal(-1);
+  }),
+  it('compareTo(int)', function() {
+    bigInt(0).compareTo(0).should.equal(0);
+    bigInt(1).compareTo(0).should.equal(1);
+    bigInt(0).compareTo(1).should.equal(-1);
+
+    bigInt(1).compareTo(1).should.equal(0);
+    bigInt(2).compareTo(1).should.equal(1);
+    bigInt(1).compareTo(2).should.equal(-1);
+
+    bigInt(1000).compareTo(1000).should.equal(0);
+    bigInt(1000).compareTo(1).should.equal(1);
+    bigInt(1).compareTo(1000).should.equal(-1);
+
+    bigInt(-1000).compareTo(-1000).should.equal(0);
+    bigInt(-1001).compareTo(-1000).should.equal(1);
+    bigInt(-1000).compareTo(-1001).should.equal(-1);
+
+    bigInt(-1).compareTo(1).should.equal(-1);
+    bigInt(1).compareTo(-1).should.equal(1);
+
+    bigInt(123456789).compareTo(987654321).should.equal(-1);
+    bigInt(121111111).compareTo(111111111).should.equal(1);
+    bigInt(111121111).compareTo(111111111).should.equal(1);
+    bigInt(111111121).compareTo(111111111).should.equal(1);
+    bigInt(111111111).compareTo(121111111).should.equal(-1);
+    bigInt(111111111).compareTo(111121111).should.equal(-1);
+    bigInt(111111111).compareTo(111111121).should.equal(-1);
+  }),
+  it('eq and ne', function() {
+    bigInt(0).eq(0).should.equal(true);
+    bigInt(1).eq(0).should.equal(false);
+    bigInt(0).eq(1).should.equal(false);
+
+    bigInt(0).ne(0).should.equal(false);
+    bigInt(1).ne(0).should.equal(true);
+    bigInt(0).ne(1).should.equal(true);
+  }),
+  it('lt and le', function() {
+    bigInt(0).lt(0).should.equal(false);
+    bigInt(1).lt(0).should.equal(false);
+    bigInt(0).lt(1).should.equal(true);
+
+    bigInt(0).le(0).should.equal(true);
+    bigInt(1).le(0).should.equal(false);
+    bigInt(0).le(1).should.equal(true);
+  }),
+  it('gt and ge', function() {
+    bigInt(0).gt(0).should.equal(false);
+    bigInt(1).gt(0).should.equal(true);
+    bigInt(0).gt(1).should.equal(false);
+
+    bigInt(0).ge(0).should.equal(true);
+    bigInt(1).ge(0).should.equal(true);
+    bigInt(0).ge(1).should.equal(false);
+  });
+});
+
 describe('#predicates', function() {
   it('isZero', function() {
     bigInt(0).isZero().should.equal(true);

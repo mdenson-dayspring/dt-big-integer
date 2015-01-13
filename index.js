@@ -26,6 +26,47 @@ var bigInt = (function() {
     return !this.isEven();
   };
 
+  BigInt.prototype.compareTo = function(other) {
+    if (!(other instanceof BigInt)) {
+      other = parseInput(other);
+    }
+    
+    var result = compareInts(this.value[0], other.value[0]);
+    if (result == 0) {
+      for (var i=Math.abs(this.value[0]); i>=1 && result==0; i--) {
+	  result = compareInts(this.value[i], other.value[i]);
+      }
+    }
+    return result;
+  };
+  function compareInts(thisv, otherv) {
+    if (thisv == otherv)
+      return 0;
+    else if (thisv < otherv) 
+      return -1;
+    else if (thisv > otherv) 
+      return 1;
+  }
+
+  BigInt.prototype.eq = function(other) {
+    return this.compareTo(other) == 0;
+  };
+  BigInt.prototype.ne = function(other) {
+    return this.compareTo(other) != 0;
+  };
+  BigInt.prototype.lt = function(other) {
+    return this.compareTo(other) < 0;
+  };
+  BigInt.prototype.le = function(other) {
+    return this.compareTo(other) <= 0;
+  };
+  BigInt.prototype.gt = function(other) {
+    return this.compareTo(other) > 0;
+  };
+  BigInt.prototype.ge = function(other) {
+    return this.compareTo(other) >= 0;
+  };
+
   BigInt.prototype.abs = function() {
     var value = this.value.slice(0);
     value[0] = Math.abs(value[0]);

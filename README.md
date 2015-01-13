@@ -1,7 +1,8 @@
 Big Integer library module
 ==========================
 
-A library providing a arbitrary length integer implementation for Node and browser javascript coding.
+A library providing a arbitrary length integer implementation for Node and browser javascript coding.  
+This library was put together as an implementation of Programming Praxis "Big Number" exercises in 2011.
 
 ## Installation
 
@@ -26,5 +27,5 @@ Add unit tests for any new or changed functionality. Lint and test your code.
 
 ## Release History
 
-* 0.0.0 Not released
+* 0.1.0 First Release (Completed Programming Praxis excercise "Big Numbers: Getting Started": May 24, 2011)
 

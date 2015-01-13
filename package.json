@@ -1,6 +1,6 @@
 {
   "name": "dt-big-integer",
-  "version": "0.0.0",
+  "version": "0.1.0",
   "description": "Big Integer library",
   "main": "index.js",
   "scripts": {
