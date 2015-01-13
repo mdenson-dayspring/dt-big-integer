@@ -78,6 +78,104 @@ var bigInt = (function() {
     return new BigInt(value);
   };
 
+  BigInt.prototype.add = function(other) {
+    if (!(other instanceof BigInt)) {
+      other = parseInput(other);
+    }
+    
+    var thisv = this.value.slice(0);
+    var otherv = other.value.slice(0);
+
+    if (thisv[0] >= 0 && otherv[0] >= 0) {
+      // Sum of two positive addends
+      if (thisv[0] >= otherv[0])
+        return new BigInt(sum(thisv, otherv));
+      else
+        return new BigInt(sum(otherv, thisv));
+
+    } else if (thisv[0] <= 0 && otherv[0] <= 0) {
+      // Sum of two negative addends
+      thisv[0] = -1 * thisv[0];
+      otherv[0] = -1 * otherv[0];
+      if (thisv[0] >= otherv[0])
+        var sumv = sum(thisv, otherv);
+      else
+        var sumv = sum(otherv, thisv);
+      sumv[0] = -1 * sumv[0];
+      return new BigInt(sumv);
+
+    } else {
+      // Sum of two addends with different signs
+      var absthis = this.abs();
+      var absother = other.abs();
+      if (absother.eq(absthis))
+	return new BigInt(parseInput(0));
+
+      var thisNeg = this.isNeg();
+      var thisGT = absthis.gt(absother);
+      
+      if (thisGT)
+        var diffv = diff(absthis.value, absother.value);
+      else
+        var diffv = diff(absother.value, absthis.value);
+
+      if ((thisNeg && thisGT) || (!thisNeg && !thisGT))
+        diffv[0] = -1 * diffv[0];
+      return new BigInt(diffv);
+    }
+  };
+  BigInt.prototype.sub = function(other) {
+    if (!(other instanceof BigInt)) {
+      other = parseInput(other);
+    }
+    return this.add(other.neg());
+  };
+
+  /*
+   * assumes that the addends are positive
+   * and that addend1 has the same or more digits
+   */
+  function sum(addend1, addend2) {
+    var sum = [];
+    sum.push(addend1[0]);
+    var carry = 0;
+    for(var i=1; i<addend1[0]+1; i++) {
+      var a1 = addend1[i];
+      var a2 = addend2.length>i ? addend2[i] : 0;
+      var s = a1 + a2 + carry;
+      sum.push(s % bi_base);
+      carry = Math.floor(s / bi_base);
+    }
+    if (carry>0) {
+      sum[0]++;
+      sum.push(carry);
+    }
+    return sum;
+  }
+  /*
+   * assumes that the minuend is larger that the subtrahend
+   */
+  function diff(minuend, subtrahend) {
+    var diff = [];
+    diff.push(minuend[0]);
+    var carry = 0;
+    for(var i=1; i<minuend[0]+1; i++) {
+      var m = minuend[i];
+      var s = subtrahend.length>i ? subtrahend[i] : 0;
+      var d = (m-carry) - s;
+      if (d < 0) {
+        diff.push(d + bi_base);
+        carry = 1;
+      } else {
+        diff.push(d);
+        carry = 0;
+      }
+    }    
+    for(var i=diff.length-1; i>=1 && diff[i]==0; i--) 
+      diff[0]--;
+    return diff.slice(0, diff[0]+1);
+  }
+
   BigInt.prototype.toNumber = function() {
     if (this.value[0] == 0) 
       return 0;

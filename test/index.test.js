@@ -51,6 +51,50 @@ describe('#methods', function() {
     bigInt(-1).neg().toNumber().should.equal(1);
     bigInt(123456789).neg().toNumber().should.equal(-123456789);
     bigInt(-123456789).neg().toNumber().should.equal(123456789);
+  }),
+  it('add - positive addends', function() {
+    bigInt(1234).add(1834).toNumber().should.equal(3068);
+    bigInt(234).add(1834).toNumber().should.equal(2068);
+    bigInt(1234).add(834).toNumber().should.equal(2068);
+    bigInt(234).add(834).toNumber().should.equal(1068);
+    bigInt(1234).add(0).toNumber().should.equal(1234);
+    bigInt(0).add(999).toNumber().should.equal(999);
+  }),
+  it('add - negative addends', function() {
+    bigInt(-1234).add(-1834).toNumber().should.equal(-3068);
+    bigInt(-234).add(-1834).toNumber().should.equal(-2068);
+    bigInt(-1234).add(-834).toNumber().should.equal(-2068);
+    bigInt(-234).add(-834).toNumber().should.equal(-1068);
+    bigInt(-1234).add(0).toNumber().should.equal(-1234);
+    bigInt(0).add(-999).toNumber().should.equal(-999);
+  }),
+  it('add - mixed sign addends', function() {
+    bigInt(-1).add(1).toNumber().should.equal(0);
+
+    bigInt(-1).add(1834).toNumber().should.equal(1833);
+    bigInt(-234).add(1834).toNumber().should.equal(1600);
+    bigInt(-999).add(2000).toNumber().should.equal(1001);
+
+    bigInt(1).add(-1834).toNumber().should.equal(-1833);
+    bigInt(234).add(-1834).toNumber().should.equal(-1600);
+    bigInt(999).add(-2000).toNumber().should.equal(-1001);
+
+    bigInt(-999999).add(1000000).toString().should.equal("1,1");
+    bigInt(999).add(-1000).toString().should.equal("-1,1");
+  }),
+  it('sub', function() {
+    bigInt(1).sub(1).toNumber().should.equal(0);
+
+    bigInt(1834).sub(1).toNumber().should.equal(1833);
+    bigInt(1834).sub(234).toNumber().should.equal(1600);
+    bigInt(2000).sub(999).toNumber().should.equal(1001);
+
+    bigInt(1).sub(1834).toNumber().should.equal(-1833);
+    bigInt(234).sub(1834).toNumber().should.equal(-1600);
+    bigInt(999).sub(2000).toNumber().should.equal(-1001);
+
+    bigInt(1000000).sub(999999).toString().should.equal("1,1");
+    bigInt(999).sub(1000).toString().should.equal("-1,1");
   });
 });
 
