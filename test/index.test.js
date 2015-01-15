@@ -53,6 +53,13 @@ describe('#methods', function() {
     bigInt(123456789).neg().toNumber().should.equal(-123456789);
     bigInt(-123456789).neg().toNumber().should.equal(123456789);
   }),
+  it('sign', function() {
+    bigInt(0).sign().should.equal(0);
+    bigInt(1).sign().should.equal(1);
+    bigInt(1000).sign().should.equal(1);
+    bigInt(-1).sign().should.equal(-1);
+    bigInt(-1000).sign().should.equal(-1);
+  }),
   it('add - positive addends', function() {
     bigInt(1234).add(1834).toNumber().should.equal(3068);
     bigInt(234).add(1834).toNumber().should.equal(2068);

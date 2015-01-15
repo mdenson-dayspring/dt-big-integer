@@ -21,10 +21,10 @@ var bigInt = (function() {
     return this.sign() < 0;
   };
   BigInt.prototype.isPos = function() {
-    return this.value[0] > 0;
+    return this.sign() > 0;
   };
   BigInt.prototype.isZero = function() {
-    return this.value[0] == 0;
+    return this.sign() == 0;
   };
   BigInt.prototype.isEven = function() {
     return this.isZero() || ((this.value[1] % 2) == 0);
@@ -35,7 +35,12 @@ var bigInt = (function() {
 
   // comparison methods
   BigInt.prototype.sign = function() {
-    return (this.value[0]<0) ? -1 : 1;
+    if (this.value[0]<0)
+      return -1;
+    else if (this.value[0]>0)
+      return 1;
+    else
+      return 0;
   };
   BigInt.prototype.compareTo = function(other) {
     if (!(other instanceof BigInt)) {
