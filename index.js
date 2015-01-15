@@ -27,7 +27,7 @@ var bigInt = (function() {
     return this.sign() == 0;
   };
   BigInt.prototype.isEven = function() {
-    return this.isZero() || ((this.value[1] % 2) == 0);
+    return this.sign()==0 || ((this.value[1] % 2) == 0);
   };
   BigInt.prototype.isOdd = function() {
     return !this.isEven();
