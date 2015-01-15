@@ -1,5 +1,8 @@
 var bigInt = (function() {
-  var bi_base = 1000;
+  var bi_base = 0x4000000; // 2^26 so there is not overflow in multiplication in the JS 2^53 ints
+  function _testBase() {
+    bi_base = 1000;
+  }
 
   function BigInt (value) {
     this.value = value;
@@ -8,10 +11,14 @@ var bigInt = (function() {
   BigInt.prototype.toString = function() {
     return this.value.toString();
   };
+  // string representation used in tests
+  BigInt.prototype.testString = function() {
+    return this.value.toString();
+  };
 
   // simple predicates
   BigInt.prototype.isNeg = function() {
-    return this.value[0] < 0;
+    return this.sign() < 0;
   };
   BigInt.prototype.isPos = function() {
     return this.value[0] > 0;
@@ -26,11 +33,14 @@ var bigInt = (function() {
     return !this.isEven();
   };
 
+  // comparison methods
+  BigInt.prototype.sign = function() {
+    return (this.value[0]<0) ? -1 : 1;
+  };
   BigInt.prototype.compareTo = function(other) {
     if (!(other instanceof BigInt)) {
       other = parseInput(other);
     }
-    
     var result = compareInts(this.value[0], other.value[0]);
     if (result == 0) {
       for (var i=Math.abs(this.value[0]); i>=1 && result==0; i--) {
@@ -47,7 +57,6 @@ var bigInt = (function() {
     else if (thisv > otherv) 
       return 1;
   }
-
   BigInt.prototype.eq = function(other) {
     return this.compareTo(other) == 0;
   };
@@ -67,6 +76,7 @@ var bigInt = (function() {
     return this.compareTo(other) >= 0;
   };
 
+  // simple math methods
   BigInt.prototype.abs = function() {
     var value = this.value.slice(0);
     value[0] = Math.abs(value[0]);
@@ -78,6 +88,7 @@ var bigInt = (function() {
     return new BigInt(value);
   };
 
+  // arithmetic methods
   BigInt.prototype.add = function(other) {
     if (!(other instanceof BigInt)) {
       other = parseInput(other);
@@ -124,12 +135,52 @@ var bigInt = (function() {
       return new BigInt(diffv);
     }
   };
-  BigInt.prototype.sub = function(other) {
+  BigInt.prototype.subtract = function(other) {
     if (!(other instanceof BigInt)) {
       other = parseInput(other);
     }
     return this.add(other.neg());
   };
+  BigInt.prototype.multiply = function(other) {
+    if (!(other instanceof BigInt)) {
+      other = parseInput(other);
+    }
+    
+    var productv = [];
+    if (this.eq(0) || other.eq(0))
+      productv = [0];
+    else {
+      var thisabs = this.abs();
+      var otherabs = other.abs();
+
+      if (thisabs.eq(1))
+        productv = otherabs.value.slice(0);
+      else if (otherabs.eq(1))
+        productv = thisabs.value.slice(0);
+      else {
+        if (thisabs.value[0] > otherabs.value[0]) {
+          var multiplier = otherabs.value.slice(0);
+          var multiplicand = thisabs.value.slice(0);
+	} else {
+          var multiplier = thisabs.value.slice(0);
+          var multiplicand = otherabs.value.slice(0);
+	}
+	productv.push(0);
+        for (var i=1; i<=multiplier[0]; i++) {
+          var tmp = [multiplicand[0] + (i-1)];
+	  for (var p=1; p<i; p++)
+	    tmp.push(0);
+          for (var j=1; j<=multiplicand[0]; j++) {
+            tmp.push(multiplier[i] * multiplicand[j]);
+          }
+          productv = sum(tmp, productv);
+        }
+      }
+      if (this.sign() != other.sign())
+	productv[0] = -1 * productv[0];
+    }
+    return new BigInt(productv);
+  }
 
   /*
    * assumes that the addends are positive
@@ -220,10 +271,16 @@ var bigInt = (function() {
     return new BigInt(outvalue);
   }
 
+  // some synonms
+  BigInt.prototype.sub = BigInt.prototype.subtract;
+  BigInt.prototype.mul = BigInt.prototype.multiply;
+  BigInt.prototype.times = BigInt.prototype.multiply;
+
   var fnReturn = function (a) {
     if (typeof a === 'undefined') return parseInput(0);
     return parseInput(a);
   };
+  fnReturn._testBase = _testBase;
   return fnReturn;
 })();
 

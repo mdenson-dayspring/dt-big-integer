@@ -1,24 +1,25 @@
 var should = require('chai').should(),
     bigInt = require('../index');
+bigInt._testBase();
 
 describe('#factory bigInt()', function() {
   it('null input', function() {
-    bigInt().toString().should.equal('0');
+    bigInt().testString().should.equal('0');
   }),
   it('bigInt input', function() {
-    bigInt(bigInt(1)).toString().should.equal('1,1');
+    bigInt(bigInt(1)).testString().should.equal('1,1');
   }),
   it('javascript numbers input', function() {
-    bigInt(0).toString().should.equal('0');
-    bigInt(1).toString().should.equal('1,1');
-    bigInt(-1).toString().should.equal('-1,1');
-    bigInt(100).toString().should.equal('1,100');
-    bigInt(-100).toString().should.equal('-1,100');
-    bigInt(999).toString().should.equal('1,999');
-    bigInt(-999).toString().should.equal('-1,999');
-    bigInt(1000).toString().should.equal('2,0,1');
-    bigInt(-1000).toString().should.equal('-2,0,1');
-    bigInt(123456789).toString().should.equal('3,789,456,123');
+    bigInt(0).testString().should.equal('0');
+    bigInt(1).testString().should.equal('1,1');
+    bigInt(-1).testString().should.equal('-1,1');
+    bigInt(100).testString().should.equal('1,100');
+    bigInt(-100).testString().should.equal('-1,100');
+    bigInt(999).testString().should.equal('1,999');
+    bigInt(-999).testString().should.equal('-1,999');
+    bigInt(1000).testString().should.equal('2,0,1');
+    bigInt(-1000).testString().should.equal('-2,0,1');
+    bigInt(123456789).testString().should.equal('3,789,456,123');
   });
 });
 
@@ -79,22 +80,41 @@ describe('#methods', function() {
     bigInt(234).add(-1834).toNumber().should.equal(-1600);
     bigInt(999).add(-2000).toNumber().should.equal(-1001);
 
-    bigInt(-999999).add(1000000).toString().should.equal("1,1");
-    bigInt(999).add(-1000).toString().should.equal("-1,1");
+    bigInt(-999999).add(1000000).testString().should.equal("1,1");
+    bigInt(999).add(-1000).testString().should.equal("-1,1");
   }),
-  it('sub', function() {
+  it('subtract', function() {
+    bigInt(1).subtract(1).toNumber().should.equal(0);
+
+    bigInt(1834).subtract(1).toNumber().should.equal(1833);
+    bigInt(1834).subtract(234).toNumber().should.equal(1600);
+    bigInt(2000).subtract(999).toNumber().should.equal(1001);
+
+    bigInt(1).subtract(1834).toNumber().should.equal(-1833);
+    bigInt(234).subtract(1834).toNumber().should.equal(-1600);
+    bigInt(999).subtract(2000).toNumber().should.equal(-1001);
+
+    bigInt(1000000).subtract(999999).testString().should.equal("1,1");
+    bigInt(999).subtract(1000).testString().should.equal("-1,1");
+
+    // check that synonym exists
     bigInt(1).sub(1).toNumber().should.equal(0);
+  }),
+  it('multiply', function() {
+    bigInt(0).multiply(1000).toNumber().should.equal(0);
+    bigInt(1000).multiply(0).toNumber().should.equal(0);
+    bigInt(1).multiply(1).toNumber().should.equal(1);
+    bigInt(-1).multiply(-1).toNumber().should.equal(1);
+    bigInt(-1).multiply(1).toNumber().should.equal(-1);
+    bigInt(1).multiply(-1).toNumber().should.equal(-1);
+    bigInt(400).multiply(2).testString().should.equal("1,800");
+    bigInt(500).multiply(2).testString().should.equal("2,0,1");
+    bigInt(999).multiply(999).testString().should.equal("2,1,998");
+    bigInt(999999).multiply(999999).testString().should.equal("4,1,0,998,999");
 
-    bigInt(1834).sub(1).toNumber().should.equal(1833);
-    bigInt(1834).sub(234).toNumber().should.equal(1600);
-    bigInt(2000).sub(999).toNumber().should.equal(1001);
-
-    bigInt(1).sub(1834).toNumber().should.equal(-1833);
-    bigInt(234).sub(1834).toNumber().should.equal(-1600);
-    bigInt(999).sub(2000).toNumber().should.equal(-1001);
-
-    bigInt(1000000).sub(999999).toString().should.equal("1,1");
-    bigInt(999).sub(1000).toString().should.equal("-1,1");
+    // check that synonyms exists
+    bigInt(0).mul(1000).toNumber().should.equal(0);
+    bigInt(0).times(1000).toNumber().should.equal(0);
   });
 });
 
